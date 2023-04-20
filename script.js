@@ -423,55 +423,58 @@ function checkCollisions() {
       }
     }
   }
-}
-for (let i = 0; i < enemyBullets.length; i++) {
-  if (
-    spaceship.x <= enemyBullets[i].x &&
-    spaceship.x + spaceship.width >= enemyBullets[i].x &&
-    spaceship.y <= enemyBullets[i].y &&
-    spaceship.y + spaceship.height >= enemyBullets[i].y
-  ) {
-    damageAnimation();
-    enemyBullets.splice(enemyBullets.indexOf(enemyBullets[i]), 1);
-  }
-}
-//check enemy Boss collisions
-if (gameLevel == 4) {
-  for (let i = 0; i < enemyBossBullets.length; i++) {
+
+  for (let i = 0; i < enemyBullets.length; i++) {
     if (
-      spaceship.x <= enemyBossBullets[i].x &&
-      spaceship.x + spaceship.width >= enemyBossBullets[i].x &&
-      spaceship.y <= enemyBossBullets[i].y &&
-      spaceship.y + spaceship.height >= enemyBossBullets[i].y
+      spaceship.x <= enemyBullets[i].x &&
+      spaceship.x + spaceship.width >= enemyBullets[i].x &&
+      spaceship.y <= enemyBullets[i].y &&
+      spaceship.y + spaceship.height >= enemyBullets[i].y
     ) {
       damageAnimation();
-      enemyBossBullets.splice(enemyBossBullets.indexOf(enemyBossBullets[i]), 1);
+      enemyBullets.splice(enemyBullets.indexOf(enemyBullets[i]), 1);
     }
   }
-  if (
-    spaceship.x <= enemyBoss[0].x + enemyBoss[0].width &&
-    spaceship.x + spaceship.width >= enemyBoss[0].x &&
-    spaceship.y <= enemyBoss[0].y + enemyBoss[0].height &&
-    spaceship.y + spaceship.height >= enemyBoss[0].y
-  ) {
-    damageAnimation();
-  }
-  for (let i = 0; i < bullets.length; i++) {
+  //check enemy Boss collisions
+  if (gameLevel == 4) {
+    for (let i = 0; i < enemyBossBullets.length; i++) {
+      if (
+        spaceship.x <= enemyBossBullets[i].x &&
+        spaceship.x + spaceship.width >= enemyBossBullets[i].x &&
+        spaceship.y <= enemyBossBullets[i].y &&
+        spaceship.y + spaceship.height >= enemyBossBullets[i].y
+      ) {
+        damageAnimation();
+        enemyBossBullets.splice(
+          enemyBossBullets.indexOf(enemyBossBullets[i]),
+          1
+        );
+      }
+    }
     if (
-      bullets[i].x <= enemyBoss[0].x + enemyBoss[0].width &&
-      bullets[i].x >= enemyBoss[0].x &&
-      bullets[i].y <= enemyBoss[0].y + enemyBoss[0].height &&
-      bullets[i].y >= enemyBoss[0].y
+      spaceship.x <= enemyBoss[0].x + enemyBoss[0].width &&
+      spaceship.x + spaceship.width >= enemyBoss[0].x &&
+      spaceship.y <= enemyBoss[0].y + enemyBoss[0].height &&
+      spaceship.y + spaceship.height >= enemyBoss[0].y
     ) {
-      bullets.splice(bullets.indexOf(bullets[i]), 1);
-      enemyBoss[0].enemyLives--;
-      if (enemyBoss[0].enemyLives == 0) {
-        enemyBoss.splice(enemyBoss.indexOf(enemyBoss[0]), 1);
+      damageAnimation();
+    }
+    for (let i = 0; i < bullets.length; i++) {
+      if (
+        bullets[i].x <= enemyBoss[0].x + enemyBoss[0].width &&
+        bullets[i].x >= enemyBoss[0].x &&
+        bullets[i].y <= enemyBoss[0].y + enemyBoss[0].height &&
+        bullets[i].y >= enemyBoss[0].y
+      ) {
+        bullets.splice(bullets.indexOf(bullets[i]), 1);
+        enemyBoss[0].enemyLives--;
+        if (enemyBoss[0].enemyLives == 0) {
+          enemyBoss.splice(enemyBoss.indexOf(enemyBoss[0]), 1);
+        }
       }
     }
   }
 }
-
 function moveSpaceship(e) {
   switch (e.keyCode) {
     case 37: // Left arrow
