@@ -10,25 +10,45 @@
   <body>
     <header>
       <div class="headerContainer">
-        <div class="explodedSpaceships">🚀:</div>
-        <div class="gameLevels">🔰</div>
+        <div class="explodedSpaceships"></div>
+        <img class="playerRank" src="Images/rank-one.png" alt="rank" />
         <div class="timer"></div>
-        <div class="gameLives">🤍❤️❤️❤️❤️</div>
+        <div class="gameLives"></div>
         <button class="play-pause">play</button>
+      </div>
+      <div class="rank-option hidden">
+        <img src="Images/rank-one.png" alt="rank" />
+        <img src="Images/rank-two.png" alt="rank" />
+        <img src="Images/rank-three.png" alt="rank" />
+        <img src="Images/rank-four.png" alt="rank" />
       </div>
     </header>
     <canvas id="canvas"></canvas>
-    <!-- <div class="overlay"></div>
-    <div class="modal">
-      <h1>Death <span>road</span></h1>
-      <div class="carPark">
-        <img class="carBtn" src="blueCar.png" alt="blueCar" />
-        <img class="carBtn" src="redCar.png" alt="redCar" />
-        <img class="carBtn" src="orangeCar.png" alt="orangeCar" />
+    <div class="overlay"></div>
+    <div class="gameStartMessage">
+      <h1>Space <span>war</span></h1>
+      <h3>game information</h3>
+      <div class="gameInfo">
+        <img class="spaceship" src="Images/spaceship01.png" alt="spaceship" />
+        <div class="textContext">
+          <p>Game time - ⏳</p>
+          <p>player lives - ❤️</p>
+          <p>player rank - 🎮</p>
+          <p>bullets - ⚫🔴🔵</p>
+          <p>destroyed spaceships - 🚀</p>
+        </div>
       </div>
-      <p class="requiredMessage">choose your car</p>
       <button class="startBtn">start</button>
-    </div> -->
+    </div>
+    <div class="gameOverMessage hidden">
+      <h1>Space <span>war</span></h1>
+      <h3>game information</h3>
+      <div class="gameInfo">
+        <img class="spaceship" src="Images/spaceship01.png" alt="spaceship" />
+        <div class="textContext"></div>
+      </div>
+      <button class="menuBtn">menu</button>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
