@@ -16,6 +16,9 @@ const menuBtn = document.querySelector(".menuBtn");
 const overlay = document.querySelector(".overlay");
 const gameStartMessage = document.querySelector(".gameStartMessage");
 const gameOverMessage = document.querySelector(".gameOverMessage");
+const currentRank = document.querySelector(".currentRank");
+const allExplodedSpaceships = document.querySelector(".allExplodedSpaceships");
+const fullGameTime = document.querySelector(".fullGameTime");
 
 const spaceshipImage = new Image();
 spaceshipImage.src = "Images/spaceship01.png";
@@ -202,7 +205,7 @@ function initialization() {
     height: 90,
     x: canvas.width / 2 - 45,
     y: canvas.height - 90,
-    speed: 5,
+    speed: 15,
   };
   gameLives.textContent = "❤️❤️❤️❤️❤️";
   timer.textContent = "⏳ 0:00";
@@ -470,6 +473,7 @@ function checkCollisions() {
         enemyBoss[0].enemyLives--;
         if (enemyBoss[0].enemyLives == 0) {
           enemyBoss.splice(enemyBoss.indexOf(enemyBoss[0]), 1);
+          gameOver();
         }
       }
     }
@@ -554,6 +558,9 @@ function gameOver() {
   overlay.classList.remove("hidden");
   gameOverMessage.classList.remove("hidden");
   playPause.textContent = "play";
+  currentRank.src = playerRank.src;
+  allExplodedSpaceships.textContent = explodedSpaceships.textContent;
+  fullGameTime.textContent = timer.textContent;
   menuBtn.addEventListener("click", function () {
     gameOverMessage.classList.add("hidden");
     gameStartMessage.classList.remove("hidden");

@@ -71,7 +71,7 @@ header {
   height: 150px;
   position: absolute;
   top: 60px;
-  left: 325px;
+  left: 32.5%;
   z-index: 10;
 }
 .rank-option img {
@@ -168,6 +168,21 @@ header {
   font-size: 14px;
   margin-bottom: 5px;
   text-align: start;
+}
+.gameOverMessage .gameInfo {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 10px;
+}
+.dataContent p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.dataContent img {
+  width: 35px;
+  height: 35px;
+  margin-bottom: 5px;
 }
 .spaceship {
   position: relative;
