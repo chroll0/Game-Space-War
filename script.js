@@ -25,7 +25,6 @@ spaceshipImage.src = "Images/spaceship01.png";
 const enemyBossSpaceshipImage = new Image();
 enemyBossSpaceshipImage.src = "Images/enemyBossSpaceship.png";
 const enemySpaceshipImage = new Image();
-enemySpaceshipImage.src = "Images/enemySpaceship01.png";
 
 let spaceship,
   enemy,
@@ -38,6 +37,7 @@ let spaceship,
   gameTime,
   playerLives,
   gameLevel,
+  attackingEnemy,
   enemyBossBullets;
 playing = false;
 
@@ -113,6 +113,9 @@ function initialization() {
   playerLives = 5;
   destroyedSpaceships = 0;
   gameLevel = 0;
+  attackingEnemy = 1;
+  enemySpaceshipImage.src = "Images/enemySpaceship01.png";
+  playerRank.src = "Images/rank-one.png";
   bullets = [];
   enemyBullets = [];
   enemyBossBullets = [];
@@ -122,69 +125,9 @@ function initialization() {
       height: 90,
       x: canvas.width / 2 - 45,
       y: -90,
-      speed: 1,
+      speed: 2,
       fireRate: 400,
       fireCountdown: 300,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 - 90 * 2,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 250,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 - 90 * 3 - 45,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 200,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 - 90 * 5,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 150,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 + 90,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 100,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 + 90 * 2 + 45,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 50,
-      enemyLives: 2,
-    },
-    {
-      width: 90,
-      height: 90,
-      x: canvas.width / 2 + 90 * 4,
-      y: -90,
-      speed: 1,
-      fireRate: 400,
-      fireCountdown: 0,
       enemyLives: 2,
     },
   ];
@@ -259,7 +202,7 @@ function drawEnemySpaceship() {
     );
     ctx.closePath();
     // Update enemy position and direction
-    if (enemy[i].y < 25) {
+    if (enemy[i].y < 30) {
       enemy[i].y += 1;
     } else {
       if (enemy[i].x + enemy[i].width > canvas.width) {
@@ -267,12 +210,64 @@ function drawEnemySpaceship() {
       } else if (enemy[i].x < 0) {
         enemy[i].speed = -enemy[i].speed;
       }
-      if (enemy[i].x + enemy[i].width > canvas.width - 45) {
+      if (enemy[i].x + enemy[i].width > canvas.width - 90) {
         enemy[i].y += 1;
-      } else if (enemy[i].x < 45) {
+      } else if (enemy[i].x < 90) {
         enemy[i].y += 1;
       }
       enemy[i].x += enemy[i].speed;
+    }
+    if (enemy[i].y == 29 && attackingEnemy != 5 && gameLevel == 0) {
+      enemy.push({
+        width: 90,
+        height: 90,
+        x: canvas.width / 2,
+        y: -90,
+        speed: 2,
+        fireRate: 400,
+        fireCountdown: Math.random() * 300,
+        enemyLives: 2,
+      });
+      attackingEnemy++;
+    }
+    if (enemy[i].y == 29 && attackingEnemy != 15 && gameLevel == 1) {
+      enemy.push({
+        width: 90,
+        height: 90,
+        x: canvas.width / 2,
+        y: -115,
+        speed: 2,
+        fireRate: 400,
+        fireCountdown: Math.random() * 300,
+        enemyLives: 5,
+      });
+      attackingEnemy++;
+    }
+    if (enemy[i].y == 29 && attackingEnemy != 40 && gameLevel == 2) {
+      enemy.push({
+        width: 90,
+        height: 90,
+        x: canvas.width / 2,
+        y: -90,
+        speed: 2,
+        fireRate: 400,
+        fireCountdown: Math.random() * 300,
+        enemyLives: 10,
+      });
+      attackingEnemy++;
+    }
+    if (enemy[i].y == 29 && attackingEnemy != 70 && gameLevel == 3) {
+      enemy.push({
+        width: 90,
+        height: 90,
+        x: canvas.width / 2,
+        y: -90,
+        speed: 3,
+        fireRate: 400,
+        fireCountdown: Math.random() * 300,
+        enemyLives: 15,
+      });
+      attackingEnemy++;
     }
   }
 }
@@ -403,7 +398,7 @@ function checkCollisions() {
     }
     for (let i = 0; i < bullets.length; i++) {
       if (
-        enemies.y >= 5 &&
+        enemies.y >= 30 &&
         bullets[i].x <= enemies.x + enemies.width &&
         bullets[i].x >= enemies.x &&
         bullets[i].y <= enemies.y + enemies.height &&
@@ -417,16 +412,17 @@ function checkCollisions() {
           explodedSpaceships.textContent = "🚀: " + destroyedSpaceships;
           if (destroyedSpaceships >= 21) {
             playerRank.src = "Images/rank-two.png";
-          } else if (destroyedSpaceships >= 35) {
+          }
+          if (destroyedSpaceships >= 35) {
             playerRank.src = "Images/rank-three.png";
           }
-        } else if (destroyedSpaceships >= 56) {
-          playerRank.src = "Images/rank-four.png";
+          if (destroyedSpaceships >= 56) {
+            playerRank.src = "Images/rank-four.png";
+          }
         }
       }
     }
   }
-
   for (let i = 0; i < enemyBullets.length; i++) {
     if (
       spaceship.x <= enemyBullets[i].x &&
@@ -568,146 +564,16 @@ function gameOver() {
 }
 function refreshEnemy() {
   if (gameLevel == 1) {
+    console.log(attackingEnemy);
     enemy = [
       {
         width: 90,
         height: 90,
-        x: canvas.width / 2 - 45,
+        x: canvas.width / 2 + 45,
         y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 300,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -90,
-        speed: 1.5,
+        speed: 2,
         fireRate: 400,
         fireCountdown: 250,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -90,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 0,
-        enemyLives: 5,
-      },
-      //another enemy line
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 45,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 300,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 5,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -1035,
-        speed: 1.5,
-        fireRate: 400,
-        fireCountdown: 0,
         enemyLives: 5,
       },
     ];
@@ -725,137 +591,6 @@ function refreshEnemy() {
         fireCountdown: 300,
         enemyLives: 10,
       },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -90,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 0,
-        enemyLives: 10,
-      },
-      //another enemy line
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 45,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 300,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 10,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -1035,
-        speed: 2,
-        fireRate: 400,
-        fireCountdown: 0,
-        enemyLives: 10,
-      },
     ];
     enemySpaceshipImage.src = "Images/enemySpaceship03.png";
   }
@@ -869,208 +604,6 @@ function refreshEnemy() {
         speed: 3,
         fireRate: 400,
         fireCountdown: 300,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -90,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 0,
-        enemyLives: 15,
-      },
-      //another enemy line
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 45,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 300,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -1035,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 0,
-        enemyLives: 15,
-      },
-      //another enemy line
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 45,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 300,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 2,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 250,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 3 - 45,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 200,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 - 90 * 5,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 150,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 100,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 2 + 45,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 50,
-        enemyLives: 15,
-      },
-      {
-        width: 90,
-        height: 90,
-        x: canvas.width / 2 + 90 * 4,
-        y: -1035 * 2,
-        speed: 3,
-        fireRate: 400,
-        fireCountdown: 0,
         enemyLives: 15,
       },
     ];
