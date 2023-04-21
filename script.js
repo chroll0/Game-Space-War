@@ -19,6 +19,7 @@ const gameOverMessage = document.querySelector(".gameOverMessage");
 const currentRank = document.querySelector(".currentRank");
 const allExplodedSpaceships = document.querySelector(".allExplodedSpaceships");
 const fullGameTime = document.querySelector(".fullGameTime");
+const winMessage = document.querySelector(".winMessage");
 
 const spaceshipImage = new Image();
 spaceshipImage.src = "Images/spaceship01.png";
@@ -149,6 +150,8 @@ function initialization() {
     x: canvas.width / 2 - 45,
     y: canvas.height - 90,
     speed: 15,
+    fireRate: 6,
+    fireCountdown: 0,
   };
   gameLives.textContent = "❤️❤️❤️❤️❤️";
   timer.textContent = "⏳ 0:00";
@@ -180,11 +183,24 @@ function drawBullet(bullet) {
   ctx.closePath();
 }
 function shootBullet() {
-  if (playing) {
-    // Add a new player bullet to the bullets array
+  // Add a new player bullet to the bullets array
+  if (destroyedSpaceships <= 10) {
     bullets.push({
       x: spaceship.x + spaceship.width / 2,
       y: spaceship.y,
+      speed: 5,
+      radius: 5,
+    });
+  } else if (destroyedSpaceships > 10) {
+    bullets.push({
+      x: spaceship.x + spaceship.width / 2 + 25,
+      y: spaceship.y + 50,
+      speed: 5,
+      radius: 5,
+    });
+    bullets.push({
+      x: spaceship.x + spaceship.width / 2 - 25,
+      y: spaceship.y + 50,
       speed: 5,
       radius: 5,
     });
@@ -221,7 +237,7 @@ function drawEnemySpaceship() {
       enemy.push({
         width: 90,
         height: 90,
-        x: canvas.width / 2,
+        x: canvas.width / 2 - 45,
         y: -90,
         speed: 2,
         fireRate: 400,
@@ -234,7 +250,7 @@ function drawEnemySpaceship() {
       enemy.push({
         width: 90,
         height: 90,
-        x: canvas.width / 2,
+        x: canvas.width / 2 - 45,
         y: -115,
         speed: 2,
         fireRate: 400,
@@ -243,11 +259,11 @@ function drawEnemySpaceship() {
       });
       attackingEnemy++;
     }
-    if (enemy[i].y == 29 && attackingEnemy != 40 && gameLevel == 2) {
+    if (enemy[i].y == 29 && attackingEnemy != 30 && gameLevel == 2) {
       enemy.push({
         width: 90,
         height: 90,
-        x: canvas.width / 2,
+        x: canvas.width / 2 - 45,
         y: -90,
         speed: 2,
         fireRate: 400,
@@ -256,11 +272,11 @@ function drawEnemySpaceship() {
       });
       attackingEnemy++;
     }
-    if (enemy[i].y == 29 && attackingEnemy != 70 && gameLevel == 3) {
+    if (enemy[i].y == 29 && attackingEnemy != 50 && gameLevel == 3) {
       enemy.push({
         width: 90,
         height: 90,
-        x: canvas.width / 2,
+        x: canvas.width / 2 - 45,
         y: -90,
         speed: 3,
         fireRate: 400,
@@ -304,9 +320,9 @@ function drawEnemyBullet(bullet) {
   if (gameLevel == 0) {
     ctx.fillStyle = "#6988ff";
   } else if (gameLevel == 1) {
-    ctx.fillStyle = "#062e6a";
+    ctx.fillStyle = "#ca4615";
   } else if (gameLevel == 2) {
-    ctx.fillStyle = "#0a0909";
+    ctx.fillStyle = "#53bc04";
   } else if (gameLevel == 3) {
     ctx.fillStyle = "#d29c21";
   }
@@ -410,13 +426,13 @@ function checkCollisions() {
           enemy.splice(enemy.indexOf(enemies), 1);
           destroyedSpaceships++;
           explodedSpaceships.textContent = "🚀: " + destroyedSpaceships;
-          if (destroyedSpaceships >= 21) {
+          if (destroyedSpaceships >= 15) {
             playerRank.src = "Images/rank-two.png";
           }
-          if (destroyedSpaceships >= 35) {
+          if (destroyedSpaceships >= 30) {
             playerRank.src = "Images/rank-three.png";
           }
-          if (destroyedSpaceships >= 56) {
+          if (destroyedSpaceships >= 45) {
             playerRank.src = "Images/rank-four.png";
           }
         }
@@ -470,6 +486,7 @@ function checkCollisions() {
         if (enemyBoss[0].enemyLives == 0) {
           enemyBoss.splice(enemyBoss.indexOf(enemyBoss[0]), 1);
           gameOver();
+          winMessage.classList.remove("hidden");
         }
       }
     }
@@ -483,7 +500,7 @@ function moveSpaceship(e) {
       }
       break;
     case 38: // Up arrow
-      if (spaceship.y > 0) {
+      if (spaceship.y > canvas.height / 2) {
         spaceship.y -= spaceship.speed;
       }
       break;
@@ -505,7 +522,7 @@ function moveSpaceship(e) {
       }
       break;
     case "w": // Up arrow
-      if (spaceship.y > 0) {
+      if (spaceship.y > canvas.height / 2) {
         spaceship.y -= spaceship.speed;
       }
       break;
@@ -520,7 +537,12 @@ function moveSpaceship(e) {
       }
       break;
     case " ": //shot bullets
-      shootBullet();
+      if (playing && spaceship.fireCountdown <= 0) {
+        shootBullet();
+        spaceship.fireCountdown = spaceship.fireRate;
+      } else {
+        spaceship.fireCountdown--;
+      }
       break;
   }
 }
@@ -560,6 +582,7 @@ function gameOver() {
   menuBtn.addEventListener("click", function () {
     gameOverMessage.classList.add("hidden");
     gameStartMessage.classList.remove("hidden");
+    winMessage.classList.add("hidden");
   });
 }
 function refreshEnemy() {

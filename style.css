@@ -30,7 +30,7 @@ body {
 }
 canvas {
   background: transparent;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(10px);
   box-shadow: 0 0 5px 1px white;
 }
 header {
@@ -64,15 +64,14 @@ header {
 }
 .rank-option {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 150px;
+  justify-content: space-evenly;
+  width: 160px;
+  height: 50px;
   position: absolute;
   top: 60px;
-  left: 32.5%;
-  z-index: 10;
+  left: 30%;
+  z-index: 1;
 }
 .rank-option img {
   width: 30px;
@@ -104,7 +103,7 @@ header {
 }
 .gameStartMessage,
 .gameOverMessage {
-  width: 500px;
+  width: 550px;
   height: 350px;
   position: absolute;
   left: 0;
@@ -161,6 +160,14 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
+}
+.winMessage {
+  font-size: 30px;
+  color: #84ff00;
+  box-shadow: 0 0 5px 1px white;
+  letter-spacing: 3px;
+  text-align: center;
   padding: 10px;
 }
 .textContext p {
