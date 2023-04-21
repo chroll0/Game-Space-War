@@ -184,14 +184,14 @@ function drawBullet(bullet) {
 }
 function shootBullet() {
   // Add a new player bullet to the bullets array
-  if (destroyedSpaceships <= 10) {
+  if (destroyedSpaceships <= 35) {
     bullets.push({
       x: spaceship.x + spaceship.width / 2,
       y: spaceship.y,
       speed: 5,
       radius: 5,
     });
-  } else if (destroyedSpaceships > 10) {
+  } else if (destroyedSpaceships > 35) {
     bullets.push({
       x: spaceship.x + spaceship.width / 2 + 25,
       y: spaceship.y + 50,
